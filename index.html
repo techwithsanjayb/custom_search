@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bulk Search</title>
+
+
+
+
+<style>
+
+/* Hide Images tab */
+.gsc-tabHeader.gsc-tabhInactive:nth-child(2),
+.gsc-tabHeader.gsc-tabhActive:nth-child(2) {
+    display: none !important;
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #ffffff;
+    color: #202124;
+}
+
+/* FLUID CONTAINER */
+
+.container-fluid {
+    width: 100%;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+
+/* HOME SCREEN */
+
+.hero {
+     
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: all .4s ease;
+    padding: 40px 20px;
+    min-height: 60vh;
+}
+
+.logo {
+    width: 80px;
+    max-width: 85vw;
+    margin-bottom: 30px;
+    transition: all .4s ease;
+}
+
+/* SEARCH BAR */
+
+.search-wrapper {
+    width: 100%;
+    max-width: 800px;
+    transition: all .4s ease;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #dfe1e5;
+    border-radius: 999px;
+    overflow: hidden;
+    box-shadow: 0 1px 6px rgba(32,33,36,.15);
+}
+
+.search-box:hover {
+    box-shadow: 0 3px 15px rgba(32,33,36,.22);
+}
+
+#searchInput {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 18px 25px;
+    font-size: 18px;
+    min-width: 0;
+}
+
+.search-btn {
+    border: none;
+    background: #4285f4;
+    color: white;
+    cursor: pointer;
+    padding: 18px 28px;
+    font-size: 16px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: background .2s;
+}
+
+.search-btn:hover {
+    background: #3367d6;
+}
+
+/* AFTER SEARCH */
+
+body.searched .hero {
+    min-height: auto;
+    padding: 16px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+body.searched .logo {
+    width: 60px;
+    margin-bottom: 12px;
+}
+
+body.searched .search-wrapper {
+    max-width: 100%;
+}
+
+/* RESULTS CONTAINER — fluid full width */
+
+.results-container {
+    width: 100%;
+    padding: 24px 20px;
+}
+
+/* Hide Google search box UI & branding */
+
+.gsc-search-box,
+.gsc-search-box-tools,
+.gcse-searchbox,
+.gsc-branding,
+.gsc-branding-img,
+.gsc-branding-text,
+.gsc-adBlock,
+.gs-ad,
+.gsc-ad,
+.gcsc-branding,
+.gcsc-find-more-on-google,
+.gcsc-find-more-on-google-branding,
+.gsc-above-wrapper-area-container,
+.gsc-refinementsArea,
+/*  */
+[class*="gsc-ad"],
+[id*="gsc-ad"] {
+    display: none !important;
+}
+
+/* Remove Google panel borders */
+
+.gsc-control-cse {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+.gsc-result {
+    border: none !important;
+}
+
+.gsc-results {
+    width: 100% !important;
+}
+
+/* Override Google CSE hardcoded widths */
+
+.gsc-wrapper,
+.gsc-resultsbox-visible,
+.gsc-resultsRoot,
+.gsc-results-wrapper-visible,
+.gsc-results-wrapper-overlay,
+.gsc-control-cse,
+.gsc-control-wrapper-cse,
+.gcse-searchresults-only,
+table.gsc-search-box,
+.gsc-tabsArea,
+.gsc-above-wrapper-area,
+.gsc-webResult,
+.gsc-result,
+.gs-result {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+}
+
+/* Kill any inline width Google injects via JS */
+
+[class*="gsc-"] {
+    max-width: 100% !important;
+}
+
+.gsc-webResult.gsc-result {
+    margin-bottom: 20px !important;
+    padding: 0 !important;
+}
+
+/* Hide result thumbnail images */
+
+.gs-image-box,
+.gs-web-image-box,
+.gs-web-image-box-portrait,
+.gs-web-image-box-landscape,
+.gs-image-box-square,
+.gs-promotion-image-box,
+img.gs-image,
+a.gs-image {
+    display: none !important;
+}
+
+/* Result item styling */
+
+.gs-title {
+    font-size: 18px !important;
+}
+
+.gs-snippet {
+    font-size: 14px !important;
+    color: #555 !important;
+}
+
+/* FOOTER */
+
+.footer {
+    text-align: center;
+    color: #888;
+    font-size: 13px;
+    padding: 24px 20px;
+    border-top: 1px solid #eee;
+}
+
+@media (max-width: 768px) {
+    .hero {
+        min-height: 50vh;
+        padding: 30px 16px;
+    }
+
+    .logo {
+        width: 64px;
+    }
+
+    #searchInput {
+        font-size: 16px;
+        padding: 14px 16px;
+    }
+
+    .search-btn {
+        padding: 14px 18px;
+        font-size: 15px;
+    }
+
+    body.searched .hero {
+        padding: 12px 16px;
+    }
+
+    .results-container {
+        padding: 16px;
+    }
+}
+.top-left-logo {
+    position: fixed;
+    top: 25px;
+    left: 20px;
+    
+    object-fit: contain;
+    z-index: 9999;
+}
+</style>
+</head>
+
+<body>
+
+<div class="hero">
+    <div class="container-fluid" style="display:flex; flex-direction:column; align-items:center;">
+        <img src="cdac-logo.png" class="top-left-logo" alt="cdac logo">
+        <img src="logo.png" class="logo" alt="Logo">
+
+        <div class="search-wrapper">
+            <div class="search-box">
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search the web..."
+                    autocomplete="off"
+                >
+                <button class="search-btn" onclick="searchNow()">Search</button>
+            </div>
+        </div>
+        <div style="margin:20px;text-align:center;">
+    <label>
+        <input type="radio" name="engine" value="e6a57681d98724251" checked>
+        All
+    </label>
+
+    <label>
+        <input type="radio" name="engine" value="c5f5a17fcbc0046b7">
+        Pali
+    </label>
+
+    <label>
+        <input type="radio" name="engine" value="57364ab344d524f4e">
+        Buddhist
+    </label>
+
+    <label>
+        <input type="radio" name="engine" value="425b8553ac5424f70">
+        Tibetan
+    </label>
+</div>
+    </div>
+</div>
+
+
+
+
+<div class="results-container container-fluid">
+    <div class="gcse-searchresults-only" data-noResultsString="No results found." data-linkTarget="_blank"></div>
+</div>
+
+<div class="footer container-fluid">
+    Powered by Multilingual Technologies Group
+</div>
+
+
+<script>
+
+/* Force remove inline widths Google injects on CSE elements */
+function stripGscWidths(root) {
+    root = root || document;
+    root.querySelectorAll('[class*="gsc-"], [class*="gcse-"], [class*="gs-"]').forEach(function(el) {
+        el.style.removeProperty('width');
+        el.style.removeProperty('max-width');
+        el.style.removeProperty('min-width');
+    });
+}
+
+const gscObserver = new MutationObserver(function(mutations) {
+    mutations.forEach(function(m) {
+        m.addedNodes.forEach(function(node) {
+            if (node.nodeType === 1) stripGscWidths(node);
+        });
+        if (m.type === 'attributes' && m.attributeName === 'style') {
+            const el = m.target;
+            if (el.className && typeof el.className === 'string' &&
+                (el.className.includes('gsc-') || el.className.includes('gcse-'))) {
+                el.style.removeProperty('width');
+                el.style.removeProperty('max-width');
+                el.style.removeProperty('min-width');
+            }
+        }
+    });
+});
+
+gscObserver.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['style']
+});
+
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') searchNow();
+});
+
+function searchNow() {
+    const query = document.getElementById('searchInput').value.trim();
+    if (!query) return;
+
+    document.body.classList.add('searched');
+
+    const timer = setInterval(() => {
+        if (
+            window.google &&
+            google.search &&
+            google.search.cse &&
+            google.search.cse.element
+        ) {
+            clearInterval(timer);
+            try {
+
+                const elements =
+                    google.search.cse.element.getAllElements();
+                
+                const firstElement =
+                    Object.keys(elements)[0];
+
+                google.search.cse.element
+                    .getElement(firstElement)
+                    .execute(query);
+
+            } catch (err) {
+                console.log(err);
+                console.log(
+                    "Check actual CSE element name:",
+                    google.search.cse.element.getAllElements()
+                );
+            }
+        }
+    }, 300);
+}
+
+</script>
+<script>
+
+const ENGINES = {
+    all: "e6a57681d98724251",
+    pali: "c5f5a17fcbc0046b7",
+    buddhist: "57364ab344d524f4e",
+    tibetan: "425b8553ac5424f70"
+};
+
+let currentEngine = ENGINES.all;
+
+function loadEngine(cx, callback = null) {
+
+    document.querySelector(".results-container").innerHTML =
+        '<div id="results"></div>';
+
+    // Remove previous Google script
+    const oldScript = document.getElementById("cse-script");
+    if (oldScript) oldScript.remove();
+
+    // Reset Google objects
+    delete window.google;
+
+    window.__gcse = {
+        parsetags: "explicit",
+        callback: function () {
+
+            google.search.cse.element.render({
+                div: "results",
+                tag: "searchresults-only"
+            });
+
+            if (callback) {
+                setTimeout(callback, 500);
+            }
+        }
+    };
+
+    const script = document.createElement("script");
+    script.id = "cse-script";
+    script.src = `https://cse.google.com/cse.js?cx=${cx}`;
+    script.async = true;
+
+    document.body.appendChild(script);
+}
+function clearGoogleHash() {
+
+    if (window.location.hash.startsWith("#gsc.")) {
+        history.replaceState(
+            "",
+            document.title,
+            window.location.pathname + window.location.search
+        );
+    }
+
+}
+document.addEventListener("DOMContentLoaded", function () {
+    clearGoogleHash()
+    loadEngine(currentEngine);
+
+    document
+        .querySelectorAll('input[name="engine"]')
+        .forEach(radio => {
+
+            radio.addEventListener("change", function () {
+
+                currentEngine = this.value;
+
+                const query =
+                    document.getElementById("searchInput").value.trim();
+
+                loadEngine(currentEngine, function () {
+
+                    if (query) {
+                        executeSearch(query);
+                    }
+
+                });
+
+            });
+
+        });
+
+});
+
+function executeSearch(query) {
+
+    try {
+
+        const elements =
+            google.search.cse.element.getAllElements();
+
+        const firstKey =
+            Object.keys(elements)[0];
+
+        if (!firstKey) {
+            console.log("No CSE element found");
+            return;
+        }
+
+        google.search.cse.element
+            .getElement(firstKey)
+            .execute(query);
+
+    } catch (e) {
+        console.error(e);
+    }
+
+}
+
+function searchNow() {
+
+    const query =
+        document.getElementById("searchInput").value.trim();
+
+    if (!query) return;
+
+    document.body.classList.add("searched");
+
+    executeSearch(query);
+}
+
+document
+    .getElementById("searchInput")
+    .addEventListener("keypress", function(e){
+
+        if(e.key==="Enter"){
+            searchNow();
+        }
+
+    });
+
+</script>
+
+
+</body>
+</html>
